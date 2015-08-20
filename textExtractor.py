@@ -52,53 +52,66 @@ def process_text(text):
 	if text_strip:
 		file_path_static_text_map.setdefault(current_file_path, [])
 		file_path_static_text_map[current_file_path].append(text)
+
+def displaymatch(match):
+    if match is None:
+        return
+    return match.groups()
  
 # process a line
 def process_line(l):
-	open_tags = 0
-	open_el = -1
-	tmp_str=''
-	for i, char in enumerate(l):
-		if open_el == -1:
-			if char == '$':
-				if i+1 < len(l) and l[i+1] == '{':
-					if open_tags == 0:
-						process_text(tmp_str)
-					tmp_str = ''
-					open_el = 0
-				#tmp_str += char
-			elif char == '<':
-				if open_tags == 0:
-					process_text(tmp_str)
-					tmp_str = ''
-				#tmp_str += char
-				open_tags += 1
-			elif char == '>':
-				#tmp_str += char
-				open_tags -= 1
-				if open_tags == 0:
-					tmp_str = ''
-			else:
-				tmp_str += char
-		else:
-			if char == '{':
-				open_el += 1
-				#tmp_str += char
-			elif char == '}':
-				open_el -= 1
-				#tmp_str += char
-				if (open_el == 0):
-					tmp_str = ''
-					open_el = -1
-			else:
-				tmp_str += char
-	process_text(tmp_str)
+	m = re.match("<[^>]+>([^<]+)", l)
+	if m:
+		print displaymatch(m)	
+	else:
+		m = re.match("([^<]+)", l)
+		print displaymatch(m)
+
+	# open_tags = 0
+	# open_el = -1
+	# tmp_str=''
+	# for i, char in enumerate(l):
+	# 	if open_el == -1:
+	# 		if char == '$':
+	# 			if i+1 < len(l) and l[i+1] == '{':
+	# 				if open_tags == 0:
+	# 					process_text(tmp_str)
+	# 				tmp_str = ''
+	# 				open_el = 0
+	# 			#tmp_str += char
+	# 		elif char == '<':
+	# 			if open_tags == 0:
+	# 				process_text(tmp_str)
+	# 				tmp_str = ''
+	# 			#tmp_str += char
+	# 			open_tags += 1
+	# 		elif char == '>':
+	# 			#tmp_str += char
+	# 			open_tags -= 1
+	# 			if open_tags == 0:
+	# 				tmp_str = ''
+	# 		else:
+	# 			tmp_str += char
+	# 	else:
+	# 		if char == '{':
+	# 			open_el += 1
+	# 			#tmp_str += char
+	# 		elif char == '}':
+	# 			open_el -= 1
+	# 			#tmp_str += char
+	# 			if (open_el == 0):
+	# 				tmp_str = ''
+	# 				open_el = -1
+	# 		else:
+	# 			tmp_str += char
+	# process_text(tmp_str)
  
 # process a file
 def process_file(path):
 	global current_file_path
 	current_file_path = path
 	with open(path) as f:
+		
 		for l in f:
 			process_line(l)
  

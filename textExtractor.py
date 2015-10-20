@@ -195,21 +195,25 @@ def process_path(path):
 def print_file_path_static_text_map(outputFile='output.html'):
     global file_path_static_text_map
     #print file_path_static_text_map
-    table_str = ""
-    for file_name, static_text_arr in file_path_static_text_map.iteritems():
-        table_str += "<tr>"
-        table_str += "<td rowspan='"+str(len(static_text_arr))+"'>" + file_name + "</td>"
-        for i, static_text in enumerate(static_text_arr):
-            static_text_col = "<td>"+static_text+"</td>"
-            if i == 0:
-                table_str += static_text_col
-            else:
-                table_str += "<tr>"+static_text_col+"</tr>"
-        table_str += "</tr>"
-    html_str = "<html><head><style>table, th, td {border: 1px solid black;}</style></head><body><table>"+table_str+"</table></body></html>"
-    f = open(outputFile,"w")
-    f.write(html_str)
-    f.close();
+    if file_path_static_text_map:
+        table_str = ""
+        for file_name, static_text_arr in file_path_static_text_map.iteritems():
+            table_str += "<tr>"
+            table_str += "<td rowspan='"+str(len(static_text_arr))+"'>" + file_name + "</td>"
+            for i, static_text in enumerate(static_text_arr):
+                static_text_col = "<td>"+static_text+"</td>"
+                if i == 0:
+                    table_str += static_text_col
+                else:
+                    table_str += "<tr>"+static_text_col+"</tr>"
+            table_str += "</tr>"
+        html_str = "<html><head><style>table, th, td {border: 1px solid black;}</style></head><body><table>"+table_str+"</table></body></html>"
+        f = open(outputFile,"w")
+        f.write(html_str)
+        f.close()
+        sys.exit(0)
+    else:
+        sys.exit(1)
  
 # main
 ##################################################
